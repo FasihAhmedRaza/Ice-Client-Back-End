@@ -219,11 +219,11 @@ LUDGE_TYPES = {
 ICE_CUBE_PROMPTS = {
     "Snofilled": """
     "task": "add the logo image into the center of the icecube",
-    "instructions": 
-        "effect": "Create a carved snow-filled appearance inside the ice sculpture, the image should not be colored and it should be engraved into the icecube with some depth",
+    "instructions":
+        "effect": "Create a carved snow-filled (frosted/etched) appearance inside the ice. The logo must look physically carved or engraved INTO the ice — like sandblasted or frosted glass. The logo MUST appear white/opaque-snow coloured with depth, NOT as a paper sticker, NOT as a printed image, NOT as a coloured element. There should be ZERO paper or sticker appearance.",
         "ice":"ice should be realistic WHITE ice, crystal clear, transparent, and completely free of any cloudiness, bubbles, or impurities. The ice must appear as pure white/clear ice like real ice sculptures. DO NOT make the ice blue - ice should be white or transparent like natural ice",
-        "Strict": "the logo should be engraved into the ice few centimeters with some depth. The ice cube shape MUST be an EXACT CUBE. Do NOT distort the cube shape.",
-        "Extra":"remove any background of the image before adding it to the icecube. PRESERVE THE LOGO FONT AND GEOMETRY EXACTLY."
+        "Strict": "the logo should be engraved into the ice with visible depth, like it was blasted or carved. The ice cube shape MUST be an EXACT CUBE. Do NOT distort the cube shape. ABSOLUTELY NO paper, sticker, coloured ink, or printed-paper effect allowed.",
+        "Extra":"remove any background of the image before adding it to the icecube. PRESERVE THE LOGO FONT AND GEOMETRY EXACTLY. The result should look like a real snow-filled carved ice cube — never like paper frozen inside ice."
     """,
     "Colored": """
     "task": "add the logo image into the center of the icecube ", 
@@ -234,12 +234,13 @@ ICE_CUBE_PROMPTS = {
         "ice":"ice should be realistic WHITE ice, crystal clear, transparent, and completely free of any cloudiness, bubbles, or impurities. The ice must appear as pure white/clear ice like real ice sculptures. DO NOT make the ice blue - ice should be white or transparent like natural ice"
     """,
     "Paper": """
-    "task": "add the image inside the icecube, ",
-    "instructions": 
-        "effect": "it should look like a colored printed paper is frozen into the icecube, the Logo should be colored with some white outline and transparent background and should be in center of the cube",
-        "Strict": "the image should be placed into the ice few centimeters in some depth",
-        "Extra":"remove any background of the image before adding it to the icecube",
-        "ice":"ice should be realistic WHITE ice, crystal clear, transparent, and completely free of any cloudiness, bubbles, or impurities. The ice must appear as pure white/clear ice like real ice sculptures. DO NOT make the ice blue - ice should be white or transparent like natural ice, increase the size of the cube if the logo doesnot fit"
+    "task": "add the image inside the icecube as a single unified paper piece",
+    "instructions":
+        "effect": "It should look like a single solid white rectangular paper is frozen inside the icecube. ALL text, words, logos, and design elements from the uploaded image MUST be combined together onto ONE single white paper background — do NOT separate any elements. The paper should have a solid opaque white background with all content printed on it as one unified piece, then frozen inside the ice.",
+        "paper_rule": "CRITICAL — treat every word, letter, graphic, and element in the uploaded image as a single group. Place the entire group on ONE solid white rectangular paper. Never split the design into separate floating elements. The paper is one solid rectangle with everything on it.",
+        "Strict": "the paper should be placed inside the ice a few centimeters deep. The ice cube shape MUST be an EXACT CUBE. Do NOT distort the cube shape.",
+        "Extra": "Do NOT use a transparent background for the paper — use solid white. The paper rectangle should clearly contain ALL elements from the source image together.",
+        "ice":"ice should be realistic WHITE ice, crystal clear, transparent, and completely free of any cloudiness, bubbles, or impurities. The ice must appear as pure white/clear ice like real ice sculptures. DO NOT make the ice blue - ice should be white or transparent like natural ice, increase the size of the cube if the logo does not fit"
     """,
     "Snofilled+paper": """
     "task": "add the image into the center of the icecube ",
