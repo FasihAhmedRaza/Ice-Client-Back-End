@@ -845,12 +845,13 @@ def chatbot():
             "user_input": user_input,
             "Sculpture_instructions": {
                 "sculpture_preservation": {
-                    "shape": "Maintain EXACT shape, proportions, and details from the reference image",
-                    "alterations": "Do NOT alter, add, or remove any elements of the sculpture",
-                    "Extra_ice": "Do NOT ADD EXTRA ICE TO THE SCULPTURE, ONLY THE ORIGINAL IMAGE SHOULD BE USED",
-                    "contours": "Preserve all original contours and features precisely",
+                    "shape": "ABSOLUTE PRIORITY: Reproduce the EXACT shape, proportions, silhouette, and every structural detail from the reference image with 100% fidelity. This is a non-negotiable requirement.",
+                    "alterations": "ZERO alterations allowed to the sculpture body. Do NOT change, add, remove, simplify, or modify ANY physical element of the sculpture structure.",
+                    "Extra_ice": "Do NOT ADD EXTRA ICE TO THE SCULPTURE. ONLY the original sculpture shape from the reference image should be used. No extra elements, no extra ice blocks, no modifications.",
+                    "contours": "Every curve, edge, hole, channel, and surface feature from the reference image must be reproduced exactly. Pixel-perfect shape accuracy is mandatory.",
+                    "logo_separation": "CRITICAL: The sculpture body and the client logo are TWO COMPLETELY SEPARATE ELEMENTS. The sculpture body shape must NEVER be changed to accommodate a logo. The logo is placed ON TOP of the finished sculpture as a flat paper card — it does not alter the sculpture in any way.",
                     "size": "Sculpture should be large, around 6 to 7 feet tall or wide accordingly",
-                    "color_coding": "CRITICAL: Blue color in the input reference image is ONLY A TEMPLATE INDICATOR showing where ice should be. The OUTPUT sculpture MUST BE COMPLETELY WHITE/CLEAR TRANSPARENT ICE, NOT BLUE. Light blue in reference means recess in the ice. Any other color in reference means it is made of paper and not ice. TRANSFORM ALL BLUE PARTS INTO REALISTIC WHITE/CLEAR TRANSPARENT ICE IN THE FINAL IMAGE. The final result should NEVER show blue ice - only clear/white transparent ice.",
+                    "color_coding": "CRITICAL: Blue color in the input reference image is ONLY A TEMPLATE INDICATOR showing where ice should be. The OUTPUT sculpture MUST BE COMPLETELY WHITE/CLEAR TRANSPARENT ICE, NOT BLUE. Light blue in reference means recess in the ice. TRANSFORM ALL BLUE PARTS INTO REALISTIC WHITE/CLEAR TRANSPARENT ICE IN THE FINAL IMAGE. The final result should NEVER show blue ice - only clear/white transparent ice.",
                     "CRITICAL_NO_NEW_SCULPTURES": "DO NOT create new sculptures like deer, bear, animals, or any other sculptures that are not in the reference image. ONLY render what is shown in the uploaded reference images. If toppers are added, place them ON TOP of the existing sculpture - do not replace or add new main sculptures"
                 },
                 "material_properties": {
@@ -916,11 +917,18 @@ def chatbot():
                     "scale": "The sculpture should appear as if photographed from 6-8 feet away, showing the full context and environment, not a tight close-up"
                 },
                 "sculpture_image_rules": {
-                    "stickers": {
-                        "condition": "If any detail in the sculpture is other than blue",
-                        "appearance": "It should look like a colored paper sticker pasted on the ice, not made of ice. NO white background or frosted layer around the sticker"
+                    "logo_placement": {
+                        "condition": "When a logo or branding image is provided separately from the sculpture reference",
+                        "appearance": "The logo must be applied as a PRINTED PAPER CARD element placed physically ON the surface of the ice sculpture — exactly like a real paper sticker or printed card attached to the ice. The logo card MUST have a solid white or colored rectangular/shaped background behind all text and graphics, matching the shape of the logo content. The logo element should sit flat against the ice surface and be clearly readable. It should look like a real printed paper sign placed on real ice — NOT engraved, NOT etched, NOT carved into the ice.",
+                        "background": "CRITICAL: The logo MUST have a solid white or colored background card behind it. The background shape should match the content — rectangular for text, shaped for graphic logos. This matches how real ice sculptures display client branding: a printed paper or vinyl card physically attached to the ice face.",
+                        "do_not": "Do NOT engrave or etch the logo into the ice. Do NOT make the logo transparent or frosted. Do NOT remove the white/colored background from the logo.",
+                        "real_example": "Look at real ice sculptures: logos appear as colored paper cards or printed signs placed on the ice surface, with clear white or colored backgrounds. Replicate this exact look."
                     },
-                    "transparency": "The ice must remain completely transparent and clear throughout. NO white frosted layers, NO opaque sections, NO milky areas. Only the embedded logos/text should have color, everything else is clear transparent ice"
+                    "sculpture_body": {
+                        "rule": "The ice sculpture body itself MUST remain 100% identical to the reference image. Do NOT change the shape, size, proportions, details, or any physical aspect of the sculpture. The ONLY addition allowed is the logo card placed ON the surface.",
+                        "strict": "ZERO modifications to the sculpture shape. The sculpture must look exactly like the reference photo — same structure, same details, same everything. Only add the logo as a flat paper card element on top of the existing ice surface."
+                    },
+                    "transparency": "The ice sculpture body must remain completely transparent and clear throughout. NO white frosted layers, NO opaque sections, NO milky areas. Only the logo card element should have color/background, everything else is clear transparent ice."
                 },
                 "modular_components": {
                     "topper": {
