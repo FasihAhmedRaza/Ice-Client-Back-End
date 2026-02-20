@@ -20,7 +20,24 @@ from werkzeug.utils import secure_filename
 import tempfile
 import shutil
 import hashlib
-from rapidfuzz import fuzz
+from rapidfuzz import fuzz, process
+
+# Load images2.json for sculpture image matching in support chatbot
+try:
+    with open(os.path.join(os.path.dirname(__file__), 'images2.json'), 'r', encoding='utf-8') as _f:
+        _images2_raw = json.load(_f)
+    SCULPTURE_IMAGES_DATA = _images2_raw.get("standardSculptures", []) if isinstance(_images2_raw, dict) else _images2_raw
+except Exception as _e:
+    SCULPTURE_IMAGES_DATA = []
+    print(f"Warning: Could not load images2.json: {_e}")
+
+def find_sculpture_images(user_input, top_n=3, score_cutoff=50):
+    """Fuzzy-match user input against sculpture names and return top matching image URLs."""
+    if not SCULPTURE_IMAGES_DATA:
+        return []
+    choices = {item.get("name", "").lower(): item for item in SCULPTURE_IMAGES_DATA if item.get("name")}
+    matches = process.extract(user_input.lower(), choices.keys(), scorer=fuzz.QRatio, limit=top_n, score_cutoff=score_cutoff)
+    return [choices[m[0]].get("link") for m in matches if choices[m[0]].get("link")]
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -474,6 +491,48 @@ def admin_get_history():
     except Exception as e:
         logging.error(f"Error in admin_get_history: {e}")
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/support_chat', methods=['POST'])
+def support_chat():
+    """
+    Lightweight support chatbot endpoint for the IceChatWidget popup.
+    Returns a GPT-4o text answer + fuzzy-matched gallery images from images2.json.
+    Never triggers AI image generation.
+    """
+    try:
+        data = request.get_json(silent=True) or {}
+        user_input = (data.get('user_input') or request.form.get('user_input', '')).strip()
+        if not user_input:
+            return jsonify({"response": "Please ask me something about ice sculptures!"})
+
+        system_prompt = (
+            "You are a helpful assistant for Ice Butcher Works, an ice sculpture company. "
+            "Answer questions about ice sculptures, our services, pricing, care, delivery, "
+            "custom designs, and events. Be friendly, concise, and informative. "
+            "If the user asks to see or show a specific type of sculpture, tell them "
+            "you found some examples and they are shown below."
+        )
+        completion = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_input}
+            ]
+        )
+        gpt_response = completion.choices[0].message.content
+
+        # Always try to find matching gallery images
+        sculpture_images = find_sculpture_images(user_input, top_n=3, score_cutoff=45)
+
+        result = {"response": gpt_response}
+        if sculpture_images:
+            result["sculpture_images"] = sculpture_images
+        return jsonify(result)
+
+    except Exception as e:
+        logging.error(f"support_chat error: {e}")
+        return jsonify({"response": "Sorry, I'm having trouble right now. Please try again shortly."})
+
 
 @app.route('/api/submit_feedback', methods=['POST'])
 def submit_feedback():
@@ -1082,9 +1141,13 @@ def chatbot():
                 model="gpt-4o", messages=messages
             )
             gpt_response = completion.choices[0].message.content
+            sculpture_images = find_sculpture_images(user_input)
             session["conversation"].append({"role": "user", "content": user_input})
             session["conversation"].append({"role": "assistant", "content": gpt_response})
-            return jsonify({"response": gpt_response})
+            result = {"response": gpt_response}
+            if sculpture_images:
+                result["sculpture_images"] = sculpture_images
+            return jsonify(result)
 
         elif classification == "generate":
             generation_id = uuid.uuid4().hex[:8]
